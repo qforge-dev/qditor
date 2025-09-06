@@ -280,6 +280,7 @@ export function SimpleEditor({ content, bookId, onEditor }: EditorProp) {
         <Button
           className="absolute top-3 right-2 z-[100]"
           onClick={() => updateContent(editor!, true)}
+          disabled={fetcher.state !== "idle"}
         >
           Save
         </Button>
