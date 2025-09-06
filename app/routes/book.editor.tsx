@@ -13,7 +13,7 @@ import {
 import { getHeadingsFromJson } from "../lib/tiptap.utils";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
-import { type JSONContent, Editor } from "@tiptap/core";
+import { type JSONContent, Editor, NodePos } from "@tiptap/core";
 
 export { action };
 
@@ -54,36 +54,31 @@ export default function BookEditor() {
     setSearch(e.target.value);
   };
 
-  const filterHeading = (headings: JSONContent[], search: string) => {
+  const filterHeading = (headings: NodePos[], search: string) => {
     return headings.filter((heading) => {
-      const text = heading.text?.toLowerCase() ?? "";
+      const text = heading.textContent?.toLowerCase() ?? "";
 
       return !!text.trim() && text.includes(search.toLowerCase());
     });
   };
 
+  const getHeadings = (editor: Editor | null) => {
+    if (!editor) return [];
+    return editor.$nodes("heading") ?? [];
+  };
+
   const onEditor = (editor: Editor) => {
     setEditor(editor);
   };
-  const headings = filterHeading(getHeadingsFromJson(book.content), search);
+  const headings = filterHeading(getHeadings(editor), search);
 
-  const onHeadingClick = (text?: string) => {
-    if (!editor || !text) return;
-    const content = editor.getHTML();
-
-    const startIndex = content.indexOf(text);
-
-    const endIndex = startIndex + text.length;
-
-    editor.commands.setTextSelection({
-      from: startIndex,
-      to: endIndex,
-    });
+  const onHeadingClick = (heading: NodePos) => {
+    if (!editor || !heading) return;
+    console.log(heading);
+    editor.commands.setNodeSelection(heading.pos);
 
     editor.commands.scrollIntoView();
   };
-
-  console.log(getHeadingsFromJson(book.content));
 
   return (
     <div className="grow flex h-[100dvh] overflow-hidden">
@@ -104,15 +99,15 @@ export default function BookEditor() {
             <SidebarGroupContent>
               {headings.length > 0 ? (
                 <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
-                  {filterHeading(getHeadingsFromJson(book.content), search).map(
+                  {filterHeading(getHeadings(editor), search).map(
                     (heading, index) => (
                       <li key={index}>
                         <Button
                           variant="ghost"
                           className="truncate line-clamp-1 w-full max-w-full text-left cursor-pointer"
-                          onClick={() => onHeadingClick(heading.text?.trim())}
+                          onClick={() => onHeadingClick(heading)}
                         >
-                          {heading.text}
+                          {heading.textContent}
                         </Button>
                       </li>
                     )
