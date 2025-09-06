@@ -13,7 +13,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
-import { HeadingButton } from "~/components/tiptap-ui/heading-button";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 
 import type { Route } from "./+types/home";
@@ -33,7 +32,7 @@ export default function Home() {
     >
       <AppSidebar />
       <SidebarInset>
-        <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
+        <header className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
