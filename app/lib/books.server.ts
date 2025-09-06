@@ -49,10 +49,12 @@ class Books {
     );
     const res = await openai.completion(prompt);
     if (!res) throw new Error("no content from openai");
-    const parsed = GenerateCharacters.parseResponse(res);
+    const characters = GenerateCharacters.parseResponse(res);
 
     console.log("characters!");
-    console.log(parsed);
+    console.log(characters);
+    book.getState().setCharacters(characters);
+    return book;
   }
 }
 
