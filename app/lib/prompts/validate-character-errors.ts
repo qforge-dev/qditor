@@ -14,11 +14,12 @@ export class CharacterValidationException extends Error {
 export interface CharacterValidationError {
   id: string;
   text: string;
+  reasoning: string;
 }
 
 export class ValidateCharacterErrors {
   static parseResponse(response: string): {
-    errors: { text: string }[];
+    errors: { text: string; reasoning: string }[];
   } {
     const [_frst, secondPart] = response.split("```json");
     const [firstPart, _sec] = secondPart.split("```");
@@ -34,7 +35,7 @@ export class ValidateCharacterErrors {
       Your job is to validate if the given text reflects the character properly.
 
       If the text does not contain anything about the character, return empty array.
-      If there are errors return the exact fragments from the given text.
+      If there are errors return the exact fragments from the given text and a short one sentence reasoning.
       If there are no errors return empty errors array.
 
       Explain your reasoning and at the end respond in JSON format starting with \`\`\`json and ending with \`\`\` following the schema:
@@ -43,7 +44,8 @@ export class ValidateCharacterErrors {
       {
         "errors": [
           {
-            "text": "Character likes cats"
+            "text": "Character likes cats",
+            "reasoning": "Character actually said he does not like cats"
           }
         ]
       }
@@ -90,7 +92,8 @@ export class ValidateCharacterErrors {
       },
       {
         role: "assistant",
-        content: '```json{"errors": [{"text": "He likes cats"}]}```',
+        content:
+          '```json{"errors": [{"text": "He likes cats", "reasoning": "The character actually does not like cats"}]}```',
       },
     ];
   }

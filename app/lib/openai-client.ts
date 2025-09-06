@@ -3,7 +3,7 @@ import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export class OpenAIClient {
   private client: OpenAI;
-  private model = "gpt-4.1-mini";
+  private model = "gpt-5-mini";
 
   constructor(model?: string) {
     this.client = new OpenAI({

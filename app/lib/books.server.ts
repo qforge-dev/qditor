@@ -52,6 +52,7 @@ class Books {
           errors.push(
             ...parsed.errors.map((e) => ({
               text: e.text,
+              reasoning: e.reasoning,
               id: character.toJSON().id,
             }))
           );
