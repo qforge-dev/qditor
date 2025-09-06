@@ -61,11 +61,10 @@ class Books {
       await Promise.all(completionPromises);
     }
 
+    book.getState().setErrors(errors);
+    console.log(errors);
+
     if (errors.length > 0) {
-      console.log(errors);
-
-      book.getState().setErrors(errors);
-
       return book;
     }
 
