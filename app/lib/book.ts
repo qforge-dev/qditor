@@ -1,35 +1,60 @@
 import { randomUUID } from "crypto";
 import { access, mkdir, writeFile } from "fs/promises";
 import { canAccess } from "./utils.server";
+import { renderToMarkdown } from "@tiptap/static-renderer";
+import { extensions } from "./editor-extensions";
 
 export class Book {
-  private text: string = "Good luck on your book writing journey!";
+  private content: { type: "doc"; content: any[] } = {
+    type: "doc",
+    content: [],
+  };
 
   private state: BookState = new BookState();
 
   private constructor(private id: string) {}
 
+  static async existing(id: string) {
+    return new Book(id);
+  }
+
   static async empty() {
     const id = randomUUID();
     const book = new Book(id);
-    const bookTextFileName = `${id}.md`;
-    const bookStateFileName = `${id}.json`;
+
+    await book.save();
+
+    return book;
+  }
+
+  updateContent(content: EditorContent) {
+    this.content = content;
+  }
+
+  async save() {
+    const bookTextFileName = `${this.id}.md`;
+    const bookStateFileName = `${this.id}.json`;
 
     if (!(await canAccess("books"))) {
       await mkdir("books");
     }
-    await writeFile(`books/${bookTextFileName}`, book.text);
+    await writeFile(`books/${bookTextFileName}`, JSON.stringify(this.content));
     await writeFile(
       `books/${bookStateFileName}`,
-      JSON.stringify(book.state.toJSON())
+      JSON.stringify(this.state.toJSON())
     );
-    return book;
+  }
+
+  private getText() {
+    if (!this.content) return "";
+    return renderToMarkdown({ content: this.content, extensions });
   }
 
   toJSON() {
     return {
-      text: this.text,
+      text: this.getText(),
       id: this.id,
+      content: this.content,
     };
   }
 }
@@ -41,3 +66,8 @@ export class BookState {
     };
   }
 }
+
+export type EditorContent = {
+  type: "doc";
+  content: any[];
+};

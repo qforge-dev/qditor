@@ -2,17 +2,7 @@
 
 import * as React from "react";
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
-
-// --- Tiptap Core Extensions ---
-import { StarterKit } from "@tiptap/starter-kit";
-import { Image } from "@tiptap/extension-image";
-import { TaskItem, TaskList } from "@tiptap/extension-list";
-import { TextAlign } from "@tiptap/extension-text-align";
-import { Typography } from "@tiptap/extension-typography";
-import { Highlight } from "@tiptap/extension-highlight";
-import { Subscript } from "@tiptap/extension-subscript";
-import { Superscript } from "@tiptap/extension-superscript";
-import { Selection } from "@tiptap/extensions";
+import { extensions } from "~/lib/editor-extensions";
 
 // --- UI Primitives ---
 import { Button } from "~/components/tiptap-ui-primitive/button";
@@ -24,8 +14,6 @@ import {
 } from "~/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
-import { ImageUploadNode } from "~/components/tiptap-node/image-upload-node/image-upload-node-extension";
-import { HorizontalRule } from "~/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension";
 import "~/components/tiptap-node/blockquote-node/blockquote-node.scss";
 import "~/components/tiptap-node/code-block-node/code-block-node.scss";
 import "~/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss";
@@ -36,7 +24,6 @@ import "~/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "~/components/tiptap-ui/heading-dropdown-menu";
-import { ImageUploadButton } from "~/components/tiptap-ui/image-upload-button";
 import { ListDropdownMenu } from "~/components/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "~/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "~/components/tiptap-ui/code-block-button";
@@ -64,20 +51,9 @@ import { useIsMobile } from "~/hooks/use-mobile";
 import { useWindowSize } from "~/hooks/use-window-size";
 import { useCursorVisibility } from "~/hooks/use-cursor-visibility";
 
-// --- Components ---
-import { ThemeToggle } from "~/components/tiptap-templates/simple/theme-toggle";
-
-// --- Lib ---
-import { handleImageUpload, MAX_FILE_SIZE } from "~/lib/tiptap-utils";
-
-import {
-  renderToHTMLString,
-  renderToMarkdown,
-  renderToReactElement,
-} from "@tiptap/static-renderer";
-
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
+import { useFetcher } from "react-router";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -187,44 +163,19 @@ const MobileToolbarContent = ({
   </>
 );
 
-const extensions = [
-  StarterKit.configure({
-    horizontalRule: false,
-    link: {
-      openOnClick: false,
-      enableClickSelection: true,
-    },
-  }),
-  HorizontalRule,
-  TextAlign.configure({ types: ["heading", "paragraph"] }),
-  TaskList,
-  TaskItem.configure({ nested: true }),
-  Highlight.configure({ multicolor: true }),
-  Image,
-  Typography,
-  Superscript,
-  Subscript,
-  Selection,
-  ImageUploadNode.configure({
-    accept: "image/*",
-    maxSize: MAX_FILE_SIZE,
-    limit: 3,
-    upload: handleImageUpload,
-    onError: (error) => console.error("Upload failed:", error),
-  }),
-];
-
 interface EditorProp {
   content: string;
+  bookId: string;
 }
 
-export function SimpleEditor({ content }: EditorProp) {
+export function SimpleEditor({ content, bookId }: EditorProp) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
   const toolbarRef = React.useRef<HTMLDivElement>(null);
+  const fetcher = useFetcher();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -239,11 +190,12 @@ export function SimpleEditor({ content }: EditorProp) {
       },
     },
     extensions,
-    onUpdate: (props) =>
-      console.log(
-        renderToMarkdown({ content: props.editor.getJSON(), extensions })
-      ),
-    content,
+    onUpdate: ({ editor }) => {
+      const formData = new FormData();
+      formData.set("content", JSON.stringify(editor.getJSON()));
+      formData.set("bookId", bookId);
+      fetcher.submit(formData, { method: "POST" });
+    },
   });
 
   const rect = useCursorVisibility({

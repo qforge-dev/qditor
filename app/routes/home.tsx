@@ -16,8 +16,9 @@ import {
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 
 import type { Route } from "./+types/home";
-import { Book } from "~/lib/book";
+import { Book, type EditorContent } from "~/lib/book";
 import { useLoaderData } from "react-router";
+import assert from "assert";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "qditor" }];
@@ -28,6 +29,24 @@ export async function loader() {
 
   return book.toJSON();
 }
+
+export async function action({ request }: Route.ActionArgs) {
+  console.log("ACTION");
+  let formData = await request.formData();
+  const bookId = formData.get("bookId");
+  if (!bookId) throw new Error("Book Id required");
+  assert(typeof bookId === "string");
+  const contentJSON = formData.get("content");
+  if (!contentJSON) throw new Error("Content required");
+  const content: EditorContent = JSON.parse(contentJSON as any as string);
+  const book = await Book.existing(bookId);
+  book.updateContent(content);
+
+  await book.save();
+
+  return book.toJSON();
+}
+
 export default function Home() {
   return (
     <SidebarProvider
@@ -71,7 +90,7 @@ function Main() {
   console.log(book);
   return (
     <div className="w-full ">
-      <SimpleEditor content={book.text} />
+      <SimpleEditor content={book.text} bookId={book.id} />
     </div>
   );
 }
