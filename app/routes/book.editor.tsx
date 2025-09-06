@@ -11,7 +11,7 @@ import {
   SidebarInset,
 } from "~/components/ui/sidebar";
 import { Button } from "~/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editor, NodePos } from "@tiptap/core";
 
 export { action };
@@ -35,6 +35,8 @@ export default function BookEditor() {
 
   const [search, setSearch] = useState("");
 
+  const [bookTitle, setBookTitle] = useState("Unknown Title");
+
   const onSearch = (e: any) => {
     setSearch(e.target.value);
   };
@@ -56,6 +58,12 @@ export default function BookEditor() {
     setEditor(editor);
   };
   const headings = filterHeading(getHeadings(editor), search);
+
+  useEffect(() => {
+    if (headings[0]) {
+      setBookTitle(headings[0].textContent);
+    }
+  }, [JSON.stringify(headings.map((heading) => heading.textContent))]);
 
   const onHeadingClick = (heading: NodePos) => {
     if (!editor || !heading) return;
@@ -84,17 +92,21 @@ export default function BookEditor() {
               {headings.length > 0 ? (
                 <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
                   {filterHeading(getHeadings(editor), search).map(
-                    (heading, index) => (
-                      <li key={index}>
-                        <Button
-                          variant="ghost"
-                          className="truncate line-clamp-1 w-full max-w-full text-left cursor-pointer"
-                          onClick={() => onHeadingClick(heading)}
-                        >
-                          {heading.textContent}
-                        </Button>
-                      </li>
-                    )
+                    (heading, index) => {
+                      const padding =
+                        parseInt(heading.element.nodeName.at(1)!) * 10;
+                      return (
+                        <li key={index} style={{ paddingLeft: padding }}>
+                          <Button
+                            variant="ghost"
+                            className={`truncate line-clamp-1 w-full max-w-full text-left cursor-pointer`}
+                            onClick={() => onHeadingClick(heading)}
+                          >
+                            {heading.textContent}
+                          </Button>
+                        </li>
+                      );
+                    }
                   )}
                 </ul>
               ) : (
@@ -106,8 +118,11 @@ export default function BookEditor() {
       </Sidebar>
 
       <SidebarInset>
-        <header className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4">
-          <h1>{book.id}</h1>
+        <header
+          className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4"
+          id="title"
+        >
+          {bookTitle}
         </header>
 
         <div className="grid grid-cols-[1fr_250px] grow ">
