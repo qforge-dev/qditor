@@ -37,6 +37,7 @@ export class ValidateCharacterErrors {
       If the text does not contain anything about the character, return empty array.
       If there are errors return the exact fragments from the given text and a short one sentence reasoning.
       If there are no errors return empty errors array.
+      Text can contain new insights about the characters, if so, then add them to a specific character. Only add errors if something that already exists does not match.
 
       Explain your reasoning and at the end respond in JSON format starting with \`\`\`json and ending with \`\`\` following the schema:
 
