@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router";
+import { Outlet, Link, NavLink } from "react-router";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { useLoaderData } from "react-router";
 import { Command } from "lucide-react";
@@ -14,8 +14,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
+
+import { Users, FilePenLine } from "lucide-react";
 import type { Route } from "../+types/root";
 import { books } from "~/lib/books.server";
+import { isActive } from "@tiptap/core";
+import { cn } from "~/lib/utils";
 
 export async function loader({ params }: Route.LoaderArgs) {
   if (!params.bookId) throw new Error("Book Id required");
@@ -55,13 +59,31 @@ export default function BookRoute() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupContent className="px-1.5 md:px-0 flex flex-col gap-4">
+            <SidebarGroupContent className="px-1.5 md:px-0 flex flex-col gap-2">
               <SidebarMenu>
-                <Link to={`/books/${book.id}/editor`}>Edutir</Link>
+                <NavLink
+                  to={`/books/${book.id}/editor`}
+                  className={({ isActive }) =>
+                    cn("rounded-md w-8 h-8 flex justify-center items-center", {
+                      "bg-neutral-200": isActive,
+                    })
+                  }
+                >
+                  <FilePenLine className="size-5" />
+                </NavLink>
               </SidebarMenu>
 
               <SidebarMenu>
-                <Link to={`/books/${book.id}/characters`}>Char</Link>
+                <NavLink
+                  to={`/books/${book.id}/characters`}
+                  className={({ isActive }) =>
+                    cn("rounded-md w-8 h-8 flex justify-center items-center", {
+                      "bg-neutral-200": isActive,
+                    })
+                  }
+                >
+                  <Users className="size-5" />
+                </NavLink>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
