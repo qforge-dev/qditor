@@ -15,7 +15,7 @@ export class Book {
     content: [],
   };
 
-  private state: BookState = new BookState();
+  private state: BookState = new BookState([]);
 
   private constructor(readonly id: string) {}
 
@@ -35,11 +35,11 @@ export class Book {
   }
 
   updateContent(content: EditorContent) {
-    this.previousContent = this.content;
     this.content = content;
   }
 
   async save() {
+    this.previousContent = this.content;
     const bookContentFileName = `${this.id}.content.json`;
     const bookStateFileName = `${this.id}.json`;
 
@@ -65,6 +65,7 @@ export class Book {
     const stateJSON = await readFile(`books/${bookStateFileName}`);
 
     this.content = JSON.parse(contentJSON.toString());
+    this.previousContent = this.content;
     const stateObject = JSON.parse(stateJSON.toString());
 
     const characters = stateObject.characters.map((_character: any) => {
@@ -166,11 +167,15 @@ export type EditorContent = {
 };
 
 export class BookDiff {
-  private constructor(private readonly diff: ChangeObject<string>[]) {
-    console.log(diff);
-  }
+  private constructor(private readonly diff: ChangeObject<string>[]) {}
 
   static create(bookText: string, newBookText: string) {
     return new BookDiff(diffSentences(bookText, newBookText));
+  }
+
+  getDiff() {
+    return this.diff.filter((diff) => {
+      return diff.added;
+    });
   }
 }

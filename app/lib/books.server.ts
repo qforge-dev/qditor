@@ -19,7 +19,9 @@ class Books {
   async saveBook(book: Book) {
     this.books[book.id] = book;
 
-    book.save();
+    const diff = book.diffText();
+    console.log(diff.getDiff());
+    await book.save();
   }
 
   async processDiff(book: Book, diff: string) {

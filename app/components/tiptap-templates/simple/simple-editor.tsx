@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import { extensions } from "~/lib/editor-extensions";
 
 // --- UI Primitives ---
@@ -191,13 +191,20 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
     },
     extensions,
     onUpdate: ({ editor }) => {
-      const formData = new FormData();
-      formData.set("content", JSON.stringify(editor.getJSON()));
-      formData.set("bookId", bookId);
-      fetcher.submit(formData, { method: "POST" });
+      updateContent(editor, false);
     },
     content: content,
   });
+
+  function updateContent(editor: Editor, shouldSave: boolean) {
+    const formData = new FormData();
+    formData.set("content", JSON.stringify(editor.getJSON()));
+    formData.set("bookId", bookId);
+    if (shouldSave) {
+      formData.set("save", "true");
+    }
+    fetcher.submit(formData, { method: "POST" });
+  }
 
   const rect = useCursorVisibility({
     editor,
@@ -299,7 +306,10 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
           className="simple-editor-content"
         />
 
-        <button className="absolute top-0 right-0 z-[100]" onClick={highlight}>
+        <button
+          className="absolute top-0 right-0 z-[100]"
+          onClick={() => updateContent(editor!, true)}
+        >
           CLICK
         </button>
       </EditorContext.Provider>

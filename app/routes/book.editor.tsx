@@ -81,3 +81,23 @@ export default function BookEditor() {
     </div>
   );
 }
+
+type MainProps = {
+  book: BookJson;
+};
+
+function Main({ book }: MainProps) {
+  return (
+    <div className="w-full ">
+      <SimpleEditor content={book.content} bookId={book.id} />
+    </div>
+  );
+}
+
+function RightPanel() {
+  return (
+    <div className="w-full bg-red-500 h-full">
+      <h1>RIGHT PANEL</h1>
+    </div>
+  );
+}

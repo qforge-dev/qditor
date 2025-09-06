@@ -4,7 +4,6 @@ import type { EditorContent } from "~/lib/book.server";
 import { books } from "~/lib/books.server";
 
 export async function action({ request }: Route.ActionArgs) {
-  console.log("ACTION");
   let formData = await request.formData();
   const bookId = formData.get("bookId");
   if (!bookId) throw new Error("Book Id required");
@@ -14,7 +13,11 @@ export async function action({ request }: Route.ActionArgs) {
   const content: EditorContent = JSON.parse(contentJSON as any as string);
   const book = await books.getBook(bookId);
   book.updateContent(content);
-  await books.saveBook(book);
+
+  const shouldSave = formData.get("save");
+  if (shouldSave) {
+    books.saveBook(book);
+  }
 
   return book.toJSON();
 }
