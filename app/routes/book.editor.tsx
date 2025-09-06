@@ -14,18 +14,9 @@ import { Button } from "~/components/ui/button";
 import { useEffect, useState } from "react";
 import { Editor, NodePos } from "@tiptap/core";
 
-export { action };
+import type { BookJson } from "./book.type";
 
-type BookJson = {
-  id: string;
-  content: {
-    type: "doc";
-    content: any[];
-  };
-  errors: {
-    text: string;
-  }[];
-};
+export { action };
 
 export default function BookEditor() {
   const { book } = useOutletContext<{

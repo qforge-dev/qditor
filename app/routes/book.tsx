@@ -1,4 +1,4 @@
-import { Outlet, Link, NavLink } from "react-router";
+import { Outlet, NavLink } from "react-router";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { useLoaderData } from "react-router";
 import { Command } from "lucide-react";
@@ -6,7 +6,6 @@ import { Command } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -18,7 +17,6 @@ import {
 import { Users, FilePenLine } from "lucide-react";
 import type { Route } from "../+types/root";
 import { books } from "~/lib/books.server";
-import { isActive } from "@tiptap/core";
 import { cn } from "~/lib/utils";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -88,7 +86,6 @@ export default function BookRoute() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>FOOTER</SidebarFooter>
       </Sidebar>
 
       <Outlet context={{ book }} />
