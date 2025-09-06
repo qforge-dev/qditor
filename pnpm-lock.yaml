@@ -47,6 +47,9 @@ importers:
       '@react-router/serve':
         specifier: ^7.7.1
         version: 7.8.2(react-router@7.8.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
+      '@tiptap/core':
+        specifier: ^3.4.1
+        version: 3.4.1(@tiptap/pm@3.4.1)
       '@tiptap/extension-highlight':
         specifier: ^3.4.1
         version: 3.4.1(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))

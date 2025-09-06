@@ -10,6 +10,11 @@ import {
   SidebarInput,
   SidebarInset,
 } from "~/components/ui/sidebar";
+import { getHeadingsFromJson } from "../lib/tiptap.utils";
+import { Button } from "~/components/ui/button";
+import { useState } from "react";
+import type { JSONContent } from "@tiptap/core";
+
 export { action };
 
 type BookJson = {
@@ -41,6 +46,20 @@ export default function BookEditor() {
     { text: "jest super, super ksiazka, super chlopaki robia" },
   ];
 
+  const [search, setSearch] = useState("");
+
+  const onSearch = (e: any) => {
+    setSearch(e.target.value);
+  };
+
+  const filterHeading = (headings: JSONContent[], search: string) => {
+    return headings.filter((heading) => {
+      const text = heading.text ?? "";
+
+      return !!text.trim() && text.includes(search);
+    });
+  };
+
   return (
     <div className="grow flex h-[100dvh] overflow-hidden">
       <Sidebar
@@ -48,12 +67,30 @@ export default function BookEditor() {
         className="hidden flex-1 md:flex !w-[300px] !max-w-[300px]"
       >
         <SidebarHeader className="gap-3.5 border-b p-4">
-          <div className="flex w-full items-center justify-between">HEADER</div>
-          <SidebarInput placeholder="Type to search..." />
+          <SidebarInput
+            placeholder="Type to search..."
+            value={search}
+            onChange={onSearch}
+          />
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup className="px-0">
-            <SidebarGroupContent>CONTENT</SidebarGroupContent>
+            <SidebarGroupContent>
+              <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
+                {filterHeading(getHeadingsFromJson(book.content), search).map(
+                  (heading, index) => (
+                    <li key={index}>
+                      <Button
+                        variant="ghost"
+                        className="truncate line-clamp-1 w-full max-w-full text-left"
+                      >
+                        {heading.text}
+                      </Button>
+                    </li>
+                  )
+                )}
+              </ul>
+            </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
@@ -63,13 +100,16 @@ export default function BookEditor() {
           <h1>{book.id}</h1>
         </header>
 
-        <div className="grid grid-cols-[1fr_200px] grow ">
+        <div className="grid grid-cols-[1fr_250px] grow ">
           <SimpleEditor content={book.content} bookId={book.id} />
 
           <div className="w-full bg-neutral-50 h-full p-2 overflow-y-auto flex flex-col gap-2 max-h-[92vh]">
             {errors.map((error, index) => {
               return (
-                <div className="border border-input shadow-sm rounded-lg p-2">
+                <div
+                  className="border border-input shadow-sm rounded-lg p-2"
+                  key={index}
+                >
                   <h3 className="text-xs text-red-500">Error {index + 1}</h3>
                   <p className="text-sm">{error.text}</p>
                 </div>

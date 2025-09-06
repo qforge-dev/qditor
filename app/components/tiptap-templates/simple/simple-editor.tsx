@@ -217,41 +217,6 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
     }
   }, [isMobile, mobileView]);
 
-  // React.useEffect(() => {
-  //   const textToSearch = "book";
-  //   setTimeout(() => {
-  //     if (!editor) return;
-  // editor.commands.insertContentAt({ from: 10, to: 5 }, [
-  //   {
-  //     type: "paragraph",
-  //     content: [
-  //       {
-  //         type: "text",
-  //         text: "First paragraph",
-  //         marks: [
-  //           {
-  //             type: "highlight",
-  //             attrs: {
-  //               color: "var(--tt-color-highlight-red)",
-  //             },
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     type: "paragraph",
-  //     content: [
-  //       {
-  //         type: "text",
-  //         text: "Second paragraph",
-  //       },
-  //     ],
-  //   },
-  // ]);
-  //   }, 2000);
-  // }, [editor, content]);
-
   const highlight = () => {
     if (!editor) return;
 
@@ -274,7 +239,7 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
   };
 
   return (
-    <div className="simple-editor-wrapper">
+    <div className="simple-editor-wrapper max-h-[92vh]">
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
@@ -305,13 +270,6 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
           role="presentation"
           className="simple-editor-content"
         />
-
-        <button
-          className="absolute top-0 right-0 z-[100]"
-          onClick={() => updateContent(editor!, true)}
-        >
-          CLICK
-        </button>
       </EditorContext.Provider>
     </div>
   );
