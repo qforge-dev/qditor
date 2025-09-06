@@ -3,9 +3,14 @@ import { access, mkdir, writeFile } from "fs/promises";
 import { canAccess } from "./utils.server";
 import { renderToMarkdown } from "@tiptap/static-renderer";
 import { extensions } from "./editor-extensions";
+import { diffSentences, type ChangeObject } from "diff";
 
 export class Book {
   private content: { type: "doc"; content: any[] } = {
+    type: "doc",
+    content: [],
+  };
+  private previousContent: { type: "doc"; content: any[] } = {
     type: "doc",
     content: [],
   };
@@ -28,6 +33,7 @@ export class Book {
   }
 
   updateContent(content: EditorContent) {
+    this.previousContent = this.content;
     this.content = content;
   }
 
@@ -45,9 +51,9 @@ export class Book {
     );
   }
 
-  toMarkdown() {
-    if (!this.content) return "";
-    return renderToMarkdown({ content: this.content, extensions });
+  static toMarkdown(content: EditorContent) {
+    if (!content) return "";
+    return renderToMarkdown({ content: content, extensions });
   }
 
   toJSON() {
@@ -55,6 +61,13 @@ export class Book {
       id: this.id,
       content: this.content,
     };
+  }
+
+  diffText() {
+    return BookDiff.create(
+      Book.toMarkdown(this.previousContent),
+      Book.toMarkdown(this.content)
+    );
   }
 }
 
@@ -90,3 +103,13 @@ export type EditorContent = {
   type: "doc";
   content: any[];
 };
+
+export class BookDiff {
+  private constructor(private readonly diff: ChangeObject<string>[]) {
+    console.log(diff);
+  }
+
+  static create(bookText: string, newBookText: string) {
+    return new BookDiff(diffSentences(bookText, newBookText));
+  }
+}
