@@ -1,4 +1,4 @@
-import { Character, type CharacterProperties } from "../book";
+import { Character, type CharacterProperties } from "../book.server";
 import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export class GenerateCharacters {
