@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, Link } from "react-router";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { useLoaderData } from "react-router";
 import { Command } from "lucide-react";
@@ -26,6 +26,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export default function BookRoute() {
   const book = useLoaderData<typeof loader>();
+
   return (
     <SidebarProvider
       style={
@@ -54,8 +55,14 @@ export default function BookRoute() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupContent className="px-1.5 md:px-0">
-              <SidebarMenu>TEST</SidebarMenu>
+            <SidebarGroupContent className="px-1.5 md:px-0 flex flex-col gap-4">
+              <SidebarMenu>
+                <Link to={`/books/${book.id}/editor`}>Edutir</Link>
+              </SidebarMenu>
+
+              <SidebarMenu>
+                <Link to={`/books/${book.id}/characters`}>Char</Link>
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>

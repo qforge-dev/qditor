@@ -67,8 +67,9 @@ export default function BookEditor() {
 
   const onHeadingClick = (heading: NodePos) => {
     if (!editor || !heading) return;
-    editor.commands.setNodeSelection(heading.pos);
 
+    editor.commands.setTextSelection(heading.range);
+    editor.commands.focus();
     editor.commands.scrollIntoView();
   };
 
