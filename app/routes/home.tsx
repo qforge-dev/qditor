@@ -16,11 +16,17 @@ import {
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 
 import type { Route } from "./+types/home";
+import { Book } from "~/lib/book";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "qditor" }];
 }
 
+export function loader() {
+  const book = Book.empty();
+
+  return {};
+}
 export default function Home() {
   return (
     <SidebarProvider
