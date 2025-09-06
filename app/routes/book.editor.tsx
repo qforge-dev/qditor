@@ -1,6 +1,8 @@
 import assert from "node:assert";
 import type { Route } from "../+types/root";
 import { Book, type EditorContent } from "~/lib/book";
+import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
+import { useLoaderData, useOutletContext } from "react-router";
 
 export async function action({ request }: Route.ActionArgs) {
   console.log("ACTION");
@@ -19,6 +21,43 @@ export async function action({ request }: Route.ActionArgs) {
   return book.toJSON();
 }
 
+type BookJson = {
+  id: string;
+  content: {
+    type: "doc";
+    content: any[];
+  };
+};
+
 export default function BookEditor() {
-  return <div>Editor</div>;
+  const { book } = useOutletContext<{
+    book: BookJson;
+  }>();
+
+  return (
+    <>
+      <Main book={book} />
+      <RightPanel />
+    </>
+  );
+}
+
+type MainProps = {
+  book: BookJson;
+};
+
+function Main({ book }: MainProps) {
+  return (
+    <div className="w-full ">
+      <SimpleEditor content={book.content} bookId={book.id} />
+    </div>
+  );
+}
+
+function RightPanel() {
+  return (
+    <div className="w-full bg-red-500 h-full">
+      <h1>RIGHT PANEL</h1>
+    </div>
+  );
 }
