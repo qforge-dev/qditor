@@ -13,6 +13,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
+import { HeadingButton } from "~/components/tiptap-ui/heading-button";
+import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 
 import type { Route } from "./+types/home";
 
@@ -61,7 +63,7 @@ export default function Home() {
 function Main() {
   return (
     <div className="w-full ">
-      <h1>MAIN</h1>
+      <SimpleEditor />
     </div>
   );
 }
