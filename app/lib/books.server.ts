@@ -21,7 +21,10 @@ class Books {
 
     const diff = book.diffText();
     console.log(diff.getDiff());
-    await book.save();
+
+    this.processDiff(book, diff.getDiff()[0].valueWithContext);
+
+    book.save();
   }
 
   async processDiff(book: Book, diff: string) {

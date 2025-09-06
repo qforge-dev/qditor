@@ -208,7 +208,7 @@ export class BookDiff {
         );
         return {
           ...diff,
-          value: this.newBookText.slice(startIndex, endIndex),
+          valueWithContext: this.newBookText.slice(startIndex, endIndex),
         };
       });
   }
