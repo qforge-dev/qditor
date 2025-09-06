@@ -31,6 +31,7 @@ class Books {
 
     if (book.getState().getCharacters().length !== 0) {
       for (const character of book.getState().getCharacters()) {
+        console.log(`Validating ${character.toJSON().name}`);
         const prompt = ValidateCharacterErrors.build(diff, character);
         const res = await openai.completion(prompt);
         if (!res) throw new Error("no content from openai");
