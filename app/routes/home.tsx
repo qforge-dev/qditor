@@ -49,15 +49,27 @@ export default function Home() {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          {Array.from({ length: 24 }).map((_, index) => (
-            <div
-              key={index}
-              className="bg-muted/50 aspect-video h-12 w-full rounded-lg"
-            />
-          ))}
+        <div className="grid grid-cols-[1fr_200px] grow">
+          <Main />
+          <RightPanel />
         </div>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+function Main() {
+  return (
+    <div className="w-full ">
+      <h1>MAIN</h1>
+    </div>
+  );
+}
+
+function RightPanel() {
+  return (
+    <div className="w-full bg-red-500 h-full">
+      <h1>RIGHT PANEL</h1>
+    </div>
   );
 }
