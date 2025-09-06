@@ -33,22 +33,6 @@ export default function BookEditor() {
   }>();
   const [editor, setEditor] = useState<Editor | null>(null);
 
-  const errors = [
-    { text: "jest super" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-    { text: "jest super, super ksiazka, super chlopaki robia" },
-  ];
-
   const [search, setSearch] = useState("");
 
   const onSearch = (e: any) => {
