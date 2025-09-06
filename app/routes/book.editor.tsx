@@ -3,16 +3,7 @@ import type { Route } from "../+types/root";
 import { Book, type EditorContent } from "~/lib/book";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
 import { useOutletContext } from "react-router";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb";
-import { Separator } from "~/components/ui/separator";
-import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
+import { SidebarInset } from "~/components/ui/sidebar";
 import {
   Sidebar,
   SidebarContent,
@@ -71,22 +62,7 @@ export default function BookEditor() {
 
       <SidebarInset>
         <header className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inbox</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <h1>{book.id}</h1>
         </header>
         <div className="grid grid-cols-[1fr_200px] grow">
           <Main book={book} />
