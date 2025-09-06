@@ -71,8 +71,7 @@ function Main() {
   console.log(book);
   return (
     <div className="w-full ">
-      {book.text}
-      <SimpleEditor />
+      <SimpleEditor content={book.text} />
     </div>
   );
 }

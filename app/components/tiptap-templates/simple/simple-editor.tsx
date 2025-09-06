@@ -70,10 +70,14 @@ import { ThemeToggle } from "~/components/tiptap-templates/simple/theme-toggle";
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from "~/lib/tiptap-utils";
 
+import {
+  renderToHTMLString,
+  renderToMarkdown,
+  renderToReactElement,
+} from "@tiptap/static-renderer";
+
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
-
-import content from "~/components/tiptap-templates/simple/data/content.json";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -183,7 +187,38 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor() {
+const extensions = [
+  StarterKit.configure({
+    horizontalRule: false,
+    link: {
+      openOnClick: false,
+      enableClickSelection: true,
+    },
+  }),
+  HorizontalRule,
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
+  TaskList,
+  TaskItem.configure({ nested: true }),
+  Highlight.configure({ multicolor: true }),
+  Image,
+  Typography,
+  Superscript,
+  Subscript,
+  Selection,
+  ImageUploadNode.configure({
+    accept: "image/*",
+    maxSize: MAX_FILE_SIZE,
+    limit: 3,
+    upload: handleImageUpload,
+    onError: (error) => console.error("Upload failed:", error),
+  }),
+];
+
+interface EditorProp {
+  content: string;
+}
+
+export function SimpleEditor({ content }: EditorProp) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -203,32 +238,11 @@ export function SimpleEditor() {
         class: "simple-editor",
       },
     },
-    extensions: [
-      StarterKit.configure({
-        horizontalRule: false,
-        link: {
-          openOnClick: false,
-          enableClickSelection: true,
-        },
-      }),
-      HorizontalRule,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Image,
-      Typography,
-      Superscript,
-      Subscript,
-      Selection,
-      ImageUploadNode.configure({
-        accept: "image/*",
-        maxSize: MAX_FILE_SIZE,
-        limit: 3,
-        upload: handleImageUpload,
-        onError: (error) => console.error("Upload failed:", error),
-      }),
-    ],
+    extensions,
+    onUpdate: (props) =>
+      console.log(
+        renderToMarkdown({ content: props.editor.getJSON(), extensions })
+      ),
     content,
   });
 
