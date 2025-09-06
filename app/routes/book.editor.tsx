@@ -22,13 +22,15 @@ type BookJson = {
     type: "doc";
     content: any[];
   };
+  errors: {
+    text: string;
+  }[];
 };
 
 export default function BookEditor() {
   const { book } = useOutletContext<{
     book: BookJson;
   }>();
-
   const [editor, setEditor] = useState<Editor | null>(null);
 
   const errors = [
@@ -73,7 +75,6 @@ export default function BookEditor() {
 
   const onHeadingClick = (heading: NodePos) => {
     if (!editor || !heading) return;
-    console.log(heading);
     editor.commands.setNodeSelection(heading.pos);
 
     editor.commands.scrollIntoView();
@@ -133,7 +134,7 @@ export default function BookEditor() {
           />
 
           <div className="w-full bg-neutral-50 h-full p-2 overflow-y-auto flex flex-col gap-2 max-h-[92vh]">
-            {errors.map((error, index) => {
+            {book.errors.map((error, index) => {
               return (
                 <div
                   className="border border-input shadow-sm rounded-lg p-2"
