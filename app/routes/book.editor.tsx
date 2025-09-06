@@ -56,9 +56,9 @@ export default function BookEditor() {
 
   const filterHeading = (headings: JSONContent[], search: string) => {
     return headings.filter((heading) => {
-      const text = heading.text ?? "";
+      const text = heading.text?.toLowerCase() ?? "";
 
-      return !!text.trim() && text.includes(search);
+      return !!text.trim() && text.includes(search.toLowerCase());
     });
   };
 
