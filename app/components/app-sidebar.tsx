@@ -18,8 +18,6 @@ import {
 } from "~/components/ui/sidebar";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { setOpen } = useSidebar();
-
   return (
     <Sidebar
       collapsible="icon"

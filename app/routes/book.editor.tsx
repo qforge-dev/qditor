@@ -2,7 +2,25 @@ import assert from "node:assert";
 import type { Route } from "../+types/root";
 import { Book, type EditorContent } from "~/lib/book";
 import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor";
-import { useLoaderData, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
+import { Separator } from "~/components/ui/separator";
+import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
+} from "~/components/ui/sidebar";
 
 export async function action({ request }: Route.ActionArgs) {
   console.log("ACTION");
@@ -35,10 +53,47 @@ export default function BookEditor() {
   }>();
 
   return (
-    <>
-      <Main book={book} />
-      <RightPanel />
-    </>
+    <div className="grow flex h-[100dvh] overflow-hidden">
+      <Sidebar
+        collapsible="none"
+        className="hidden flex-1 md:flex !w-[300px] !max-w-[300px]"
+      >
+        <SidebarHeader className="gap-3.5 border-b p-4">
+          <div className="flex w-full items-center justify-between">HEADER</div>
+          <SidebarInput placeholder="Type to search..." />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup className="px-0">
+            <SidebarGroupContent>CONTENT</SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+
+      <SidebarInset>
+        <header className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Inbox</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </header>
+        <div className="grid grid-cols-[1fr_200px] grow">
+          <Main book={book} />
+          <RightPanel />
+        </div>
+      </SidebarInset>
+    </div>
   );
 }
 
