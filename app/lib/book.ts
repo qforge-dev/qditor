@@ -59,9 +59,29 @@ export class Book {
 }
 
 export class BookState {
+  private characters: Character[] = [];
+
+  setCharacters(characters: Character[]) {
+    this.characters = characters;
+  }
+
   toJSON() {
     return {
-      characters: [],
+      characters: this.characters,
+    };
+  }
+}
+
+export class Character {
+  private id: string;
+  constructor(private name: string, private description: string) {
+    this.id = randomUUID();
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      description: this.description,
     };
   }
 }
