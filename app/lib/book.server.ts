@@ -74,8 +74,10 @@ export class Book {
       newChar.updateCharacter(character);
       return newChar;
     });
+    const errors = stateObject.errors;
 
     this.state = new BookState(characters);
+    this.state.setErrors(errors);
   }
 
   static toMarkdown(content: EditorContent) {
@@ -92,6 +94,9 @@ export class Book {
       id: this.id,
       content: this.content,
       errors: this.state.getErrors(),
+      characters: this.state
+        .getCharacters()
+        .map((character) => character.toJSON()),
     };
   }
 
