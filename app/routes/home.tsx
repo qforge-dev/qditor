@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Book } from "~/lib/book";
+import { Book } from "~/lib/book.server";
 import { redirect } from "react-router";
 
 export function meta({}: Route.MetaArgs) {

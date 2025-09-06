@@ -1,4 +1,4 @@
-import type { Character } from "../book";
+import type { Character } from "../book.server";
 import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export interface CharacterValidationError {

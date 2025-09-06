@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { access, mkdir, writeFile } from "fs/promises";
+import { mkdir, writeFile } from "fs/promises";
 import { canAccess } from "./utils.server";
 import { renderToMarkdown } from "@tiptap/static-renderer";
 import { extensions } from "./editor-extensions";
@@ -20,7 +20,8 @@ export class Book {
   private constructor(readonly id: string) {}
 
   static async existing(id: string) {
-    return new Book(id);
+    const book = new Book(id);
+    return book;
   }
 
   static async empty() {
@@ -38,13 +39,17 @@ export class Book {
   }
 
   async save() {
-    const bookTextFileName = `${this.id}.json`;
+    const bookContentFileName = `${this.id}.content.json`;
     const bookStateFileName = `${this.id}.json`;
 
     if (!(await canAccess("books"))) {
       await mkdir("books");
     }
-    await writeFile(`books/${bookTextFileName}`, JSON.stringify(this.content));
+
+    await writeFile(
+      `books/${bookContentFileName}`,
+      JSON.stringify(this.content)
+    );
     await writeFile(
       `books/${bookStateFileName}`,
       JSON.stringify(this.state.toJSON())

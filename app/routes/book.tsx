@@ -1,6 +1,5 @@
 import { Outlet } from "react-router";
 import { SidebarProvider } from "~/components/ui/sidebar";
-import { Book as BookClass } from "~/lib/book";
 import { useLoaderData } from "react-router";
 import { Command } from "lucide-react";
 
@@ -15,14 +14,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
+import type { Route } from "../+types/root";
+import { books } from "~/lib/books.server";
 
-export async function loader() {
-  const book = await BookClass.empty();
+export async function loader({ params }: Route.LoaderArgs) {
+  if (!params.bookId) throw new Error("Book Id required");
+  const book = await books.getBook(params.bookId);
 
   return book.toJSON();
 }
 
-export default function Book() {
+export default function BookRoute() {
   const book = useLoaderData<typeof loader>();
   return (
     <SidebarProvider
