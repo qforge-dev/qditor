@@ -85,16 +85,43 @@ export class BookState {
   }
 }
 
+export interface CharacterProperties {
+  id: string;
+  name: string;
+  description: string;
+  physicalAppearance: string;
+  traits: string[];
+  relationships: { id: string; type: string; state: string }[];
+  currentLocation: string;
+}
+
 export class Character {
-  private id: string;
-  constructor(private name: string, private description: string) {
-    this.id = randomUUID();
+  private properties: CharacterProperties = {
+    id: randomUUID(),
+    name: "",
+    description: "",
+    physicalAppearance: "",
+    traits: [],
+    relationships: [],
+    currentLocation: "",
+  };
+
+  updateCharacter(opts: Partial<CharacterProperties>) {
+    this.properties = {
+      ...this.properties,
+      ...opts,
+    };
   }
 
   toJSON() {
     return {
-      name: this.name,
-      description: this.description,
+      id: this.properties.id,
+      name: this.properties.name,
+      description: this.properties.description,
+      physicalAppearance: this.properties.physicalAppearance,
+      traits: this.properties.traits,
+      relationships: this.properties.relationships,
+      currentLocation: this.properties.currentLocation,
     };
   }
 }

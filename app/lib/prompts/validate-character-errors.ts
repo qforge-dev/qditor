@@ -1,15 +1,24 @@
 import type { Character } from "../book";
 import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
+export interface CharacterValidationError {
+  text: string;
+}
+
 export class ValidateCharacterErrors {
-  static parseResponse(response: string) {
+  static parseResponse(response: string): {
+    errors: CharacterValidationError[];
+  } {
     const [_frst, secondPart] = response.split("```json");
     const [firstPart, _sec] = secondPart.split("```");
 
     return JSON.parse(firstPart.trim());
   }
 
-  static build(text: string, character: Character) {
+  static build(
+    text: string,
+    character: Character
+  ): ChatCompletionMessageParam[] {
     const systemPrompt = `
       Your job is to validate if the given text reflects the character properly.
 
@@ -21,7 +30,11 @@ export class ValidateCharacterErrors {
 
       \`\`\`json
       {
-        "errors": ["Character likes cats"]
+        "errors": [
+          {
+            "text": "Character likes cats"
+          }
+        ]
       }
       \`\`\`
     `;
@@ -35,11 +48,17 @@ export class ValidateCharacterErrors {
       ${JSON.stringify(character)}
     `;
 
-    return {
-      systemPrompt,
-      userPrompt,
-      fewShotPrompts: ValidateCharacterErrors.fewShotPrompts(),
-    };
+    return [
+      {
+        role: "system" as const,
+        content: systemPrompt,
+      },
+      ...ValidateCharacterErrors.fewShotPrompts(),
+      {
+        role: "user" as const,
+        content: userPrompt,
+      },
+    ];
   }
 
   private static fewShotPrompts(): ChatCompletionMessageParam[] {
@@ -60,7 +79,7 @@ export class ValidateCharacterErrors {
       },
       {
         role: "assistant",
-        content: '```json{"errors": ["He likes cats"]}```',
+        content: '```json{"errors": [{"text": "He likes cats"}]}```',
       },
     ];
   }
