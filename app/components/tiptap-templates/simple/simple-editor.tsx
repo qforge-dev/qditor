@@ -166,9 +166,10 @@ const MobileToolbarContent = ({
 interface EditorProp {
   content: any;
   bookId: string;
+  onEditor: (editor: Editor) => void;
 }
 
-export function SimpleEditor({ content, bookId }: EditorProp) {
+export function SimpleEditor({ content, bookId, onEditor }: EditorProp) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -210,6 +211,11 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
   });
+
+  React.useEffect(() => {
+    if (!editor) return;
+    onEditor(editor);
+  }, [editor]);
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {
@@ -270,6 +276,13 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
           role="presentation"
           className="simple-editor-content"
         />
+
+        <Button
+          className="absolute top-3 right-2 z-[100]"
+          onClick={() => updateContent(editor!, true)}
+        >
+          Save
+        </Button>
       </EditorContext.Provider>
     </div>
   );

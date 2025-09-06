@@ -13,7 +13,7 @@ import {
 import { getHeadingsFromJson } from "../lib/tiptap.utils";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
-import type { JSONContent } from "@tiptap/core";
+import { type JSONContent, Editor } from "@tiptap/core";
 
 export { action };
 
@@ -29,6 +29,8 @@ export default function BookEditor() {
   const { book } = useOutletContext<{
     book: BookJson;
   }>();
+
+  const [editor, setEditor] = useState<Editor | null>(null);
 
   const errors = [
     { text: "jest super" },
@@ -60,6 +62,29 @@ export default function BookEditor() {
     });
   };
 
+  const onEditor = (editor: Editor) => {
+    setEditor(editor);
+  };
+  const headings = filterHeading(getHeadingsFromJson(book.content), search);
+
+  const onHeadingClick = (text?: string) => {
+    if (!editor || !text) return;
+    const content = editor.getHTML();
+
+    const startIndex = content.indexOf(text);
+
+    const endIndex = startIndex + text.length;
+
+    editor.commands.setTextSelection({
+      from: startIndex,
+      to: endIndex,
+    });
+
+    editor.commands.scrollIntoView();
+  };
+
+  console.log(getHeadingsFromJson(book.content));
+
   return (
     <div className="grow flex h-[100dvh] overflow-hidden">
       <Sidebar
@@ -73,23 +98,29 @@ export default function BookEditor() {
             onChange={onSearch}
           />
         </SidebarHeader>
+
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
-                {filterHeading(getHeadingsFromJson(book.content), search).map(
-                  (heading, index) => (
-                    <li key={index}>
-                      <Button
-                        variant="ghost"
-                        className="truncate line-clamp-1 w-full max-w-full text-left"
-                      >
-                        {heading.text}
-                      </Button>
-                    </li>
-                  )
-                )}
-              </ul>
+              {headings.length > 0 ? (
+                <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
+                  {filterHeading(getHeadingsFromJson(book.content), search).map(
+                    (heading, index) => (
+                      <li key={index}>
+                        <Button
+                          variant="ghost"
+                          className="truncate line-clamp-1 w-full max-w-full text-left cursor-pointer"
+                          onClick={() => onHeadingClick(heading.text?.trim())}
+                        >
+                          {heading.text}
+                        </Button>
+                      </li>
+                    )
+                  )}
+                </ul>
+              ) : (
+                <div className="px-2 text-xs text-center py-1">No headings</div>
+              )}
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
@@ -101,7 +132,11 @@ export default function BookEditor() {
         </header>
 
         <div className="grid grid-cols-[1fr_250px] grow ">
-          <SimpleEditor content={book.content} bookId={book.id} />
+          <SimpleEditor
+            content={book.content}
+            bookId={book.id}
+            onEditor={onEditor}
+          />
 
           <div className="w-full bg-neutral-50 h-full p-2 overflow-y-auto flex flex-col gap-2 max-h-[92vh]">
             {errors.map((error, index) => {
@@ -118,26 +153,6 @@ export default function BookEditor() {
           </div>
         </div>
       </SidebarInset>
-    </div>
-  );
-}
-
-type MainProps = {
-  book: BookJson;
-};
-
-function Main({ book }: MainProps) {
-  return (
-    <div className="w-full ">
-      <SimpleEditor content={book.content} bookId={book.id} />
-    </div>
-  );
-}
-
-function RightPanel() {
-  return (
-    <div className="w-full bg-red-500 h-full">
-      <h1>RIGHT PANEL</h1>
     </div>
   );
 }

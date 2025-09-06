@@ -19,7 +19,11 @@ function traverseNodes(nodes: any, headings: JSONContent) {
         .map((textNode: any) => textNode.text)
         .join("");
       const headingLevel = node.attrs.level;
-      headings.push({ text: headingText, level: headingLevel });
+      headings.push({
+        text: headingText,
+        content: node.content,
+        level: headingLevel,
+      });
     }
 
     if (node.content) {
