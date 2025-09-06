@@ -69,8 +69,10 @@ export class Book {
     this.previousContent = this.content;
     const stateObject = JSON.parse(stateJSON.toString());
 
-    const characters = stateObject.characters.map((_character: any) => {
-      new Character();
+    const characters = stateObject.characters.map((character: any) => {
+      const newChar = new Character();
+      newChar.updateCharacter(character);
+      return newChar;
     });
 
     this.state = new BookState(characters);
@@ -124,7 +126,7 @@ export class BookState {
 
   toJSON() {
     return {
-      characters: this.characters,
+      characters: this.characters.map((character) => character.toJSON()),
       errors: this.errors,
     };
   }
