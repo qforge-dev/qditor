@@ -12,7 +12,7 @@ export class Book {
 
   private state: BookState = new BookState();
 
-  private constructor(private id: string) {}
+  private constructor(readonly id: string) {}
 
   static async existing(id: string) {
     return new Book(id);

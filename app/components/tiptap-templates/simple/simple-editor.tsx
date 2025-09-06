@@ -164,7 +164,7 @@ const MobileToolbarContent = ({
 );
 
 interface EditorProp {
-  content: string;
+  content: any;
   bookId: string;
 }
 
@@ -196,6 +196,7 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
       formData.set("bookId", bookId);
       fetcher.submit(formData, { method: "POST" });
     },
+    content: content,
   });
 
   const rect = useCursorVisibility({

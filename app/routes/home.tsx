@@ -17,7 +17,7 @@ import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor
 
 import type { Route } from "./+types/home";
 import { Book, type EditorContent } from "~/lib/book";
-import { useLoaderData } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 import assert from "assert";
 
 export function meta({}: Route.MetaArgs) {
@@ -27,24 +27,7 @@ export function meta({}: Route.MetaArgs) {
 export async function loader() {
   const book = await Book.empty();
 
-  return book.toJSON();
-}
-
-export async function action({ request }: Route.ActionArgs) {
-  console.log("ACTION");
-  let formData = await request.formData();
-  const bookId = formData.get("bookId");
-  if (!bookId) throw new Error("Book Id required");
-  assert(typeof bookId === "string");
-  const contentJSON = formData.get("content");
-  if (!contentJSON) throw new Error("Content required");
-  const content: EditorContent = JSON.parse(contentJSON as any as string);
-  const book = await Book.existing(bookId);
-  book.updateContent(content);
-
-  await book.save();
-
-  return book.toJSON();
+  return redirect(`books/${book.id}/editor`);
 }
 
 export default function Home() {
@@ -87,10 +70,9 @@ export default function Home() {
 
 function Main() {
   const book = useLoaderData<typeof loader>();
-  console.log(book);
   return (
     <div className="w-full ">
-      <SimpleEditor content={book.text} bookId={book.id} />
+      <SimpleEditor content={book.content} bookId={book.id} />
     </div>
   );
 }
