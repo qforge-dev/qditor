@@ -22,7 +22,11 @@ class Books {
     const diff = book.diffText();
     console.log(diff.getDiff());
 
-    this.processDiff(book, diff.getDiff()[0].valueWithContext);
+    const newDiff = diff
+      .getDiff()
+      .map((el) => el.valueWithContext)
+      .join("\n\n\n\n");
+    await this.processDiff(book, newDiff);
 
     book.save();
   }
