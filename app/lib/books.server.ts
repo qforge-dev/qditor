@@ -1,4 +1,10 @@
 import { Book } from "./book.server";
+import { OpenAIClient } from "./openai-client";
+import { GenerateCharacters } from "./prompts/generate-characters";
+import {
+  ValidateCharacterErrors,
+  type CharacterValidationError,
+} from "./prompts/validate-character-errors";
 
 class Books {
   private readonly books: Record<string, Book> = {};
@@ -13,6 +19,40 @@ class Books {
     this.books[book.id] = book;
 
     book.save();
+  }
+
+  async processDiff(book: Book, diff: string) {
+    const openai = new OpenAIClient();
+
+    let errors: CharacterValidationError[] = [];
+
+    if (book.getState().getCharacters().length !== 0) {
+      const prompt = ValidateCharacterErrors.build(
+        diff,
+        book.getState().getCharacters()[0]
+      ); // temp only first char
+      const res = await openai.completion(prompt);
+      if (!res) throw new Error("no content from openai");
+      const parsed = ValidateCharacterErrors.parseResponse(res);
+
+      errors = parsed.errors;
+    }
+
+    if (errors.length > 0) {
+      console.log(errors);
+      throw new Error("Errors!"); //todo
+    }
+
+    const prompt = GenerateCharacters.build(
+      diff,
+      book.getState().getCharacters()
+    );
+    const res = await openai.completion(prompt);
+    if (!res) throw new Error("no content from openai");
+    const parsed = GenerateCharacters.parseResponse(res);
+
+    console.log("characters!");
+    console.log(parsed);
   }
 }
 

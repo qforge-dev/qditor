@@ -79,6 +79,10 @@ export class Book {
     return renderToMarkdown({ content: content, extensions });
   }
 
+  getState() {
+    return this.state;
+  }
+
   toJSON() {
     return {
       id: this.id,
@@ -98,6 +102,10 @@ export class BookState {
   constructor(characters: Character[]) {}
 
   private characters: Character[] = [];
+
+  getCharacters() {
+    return this.characters;
+  }
 
   setCharacters(characters: Character[]) {
     this.characters = characters;
