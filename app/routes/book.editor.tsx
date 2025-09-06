@@ -25,6 +25,22 @@ export default function BookEditor() {
     book: BookJson;
   }>();
 
+  const errors = [
+    { text: "jest super" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+    { text: "jest super, super ksiazka, super chlopaki robia" },
+  ];
+
   return (
     <div className="grow flex h-[100dvh] overflow-hidden">
       <Sidebar
@@ -46,32 +62,22 @@ export default function BookEditor() {
         <header className="bg-background sticky z-[30] top-0 flex shrink-0 items-center gap-2 border-b p-4">
           <h1>{book.id}</h1>
         </header>
-        <div className="grid grid-cols-[1fr_200px] grow">
-          <Main book={book} />
-          <RightPanel />
+
+        <div className="grid grid-cols-[1fr_200px] grow ">
+          <SimpleEditor content={book.content} bookId={book.id} />
+
+          <div className="w-full bg-neutral-50 h-full p-2 overflow-y-auto flex flex-col gap-2 max-h-[92vh]">
+            {errors.map((error, index) => {
+              return (
+                <div className="border border-input shadow-sm rounded-lg p-2">
+                  <h3 className="text-xs text-red-500">Error {index + 1}</h3>
+                  <p className="text-sm">{error.text}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </SidebarInset>
-    </div>
-  );
-}
-
-type MainProps = {
-  book: BookJson;
-};
-
-function Main({ book }: MainProps) {
-  console.log(book);
-  return (
-    <div className="w-full ">
-      <SimpleEditor content={book.content} bookId={book.id} />
-    </div>
-  );
-}
-
-function RightPanel() {
-  return (
-    <div className="w-full bg-red-500 h-full">
-      <h1>RIGHT PANEL</h1>
     </div>
   );
 }
