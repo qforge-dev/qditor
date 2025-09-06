@@ -4,6 +4,7 @@ import { canAccess } from "./utils.server";
 import { renderToMarkdown } from "@tiptap/static-renderer";
 import { extensions } from "./editor-extensions";
 import { diffSentences, sentenceDiff, type ChangeObject } from "diff";
+import type { ValidateCharacterErrors } from "./prompts/validate-character-errors";
 
 export class Book {
   private content: { type: "doc"; content: any[] } = {
@@ -88,6 +89,7 @@ export class Book {
     return {
       id: this.id,
       content: this.content,
+      errors: this.state.getErrors(),
     };
   }
 
@@ -100,9 +102,13 @@ export class Book {
 }
 
 export class BookState {
-  constructor(characters: Character[]) {}
+  constructor(private characters: Character[]) {}
 
-  private characters: Character[] = [];
+  private errors: ValidateCharacterErrors[] = [];
+
+  getErrors() {
+    return this.errors;
+  }
 
   getCharacters() {
     return this.characters;
@@ -112,9 +118,14 @@ export class BookState {
     this.characters = characters;
   }
 
+  setErrors(errors: ValidateCharacterErrors[]) {
+    this.errors = errors;
+  }
+
   toJSON() {
     return {
       characters: this.characters,
+      errors: this.errors,
     };
   }
 }

@@ -27,7 +27,7 @@ class Books {
   async processDiff(book: Book, diff: string) {
     const openai = new OpenAIClient();
 
-    let errors: (CharacterValidationError & { id: string })[] = [];
+    let errors: CharacterValidationError[] = [];
 
     if (book.getState().getCharacters().length !== 0) {
       for (const character of book.getState().getCharacters()) {
@@ -47,7 +47,10 @@ class Books {
 
     if (errors.length > 0) {
       console.log(errors);
-      throw new CharacterValidationException(errors);
+
+      book.getState().setErrors(errors);
+
+      return book;
     }
 
     const prompt = GenerateCharacters.build(

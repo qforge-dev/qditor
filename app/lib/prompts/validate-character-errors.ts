@@ -12,12 +12,13 @@ export class CharacterValidationException extends Error {
 }
 
 export interface CharacterValidationError {
+  id: string;
   text: string;
 }
 
 export class ValidateCharacterErrors {
   static parseResponse(response: string): {
-    errors: CharacterValidationError[];
+    errors: { text: string }[];
   } {
     const [_frst, secondPart] = response.split("```json");
     const [firstPart, _sec] = secondPart.split("```");
