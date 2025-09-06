@@ -32,7 +32,7 @@ export class Book {
   }
 
   async save() {
-    const bookTextFileName = `${this.id}.md`;
+    const bookTextFileName = `${this.id}.json`;
     const bookStateFileName = `${this.id}.json`;
 
     if (!(await canAccess("books"))) {
@@ -45,14 +45,13 @@ export class Book {
     );
   }
 
-  private getText() {
+  toMarkdown() {
     if (!this.content) return "";
     return renderToMarkdown({ content: this.content, extensions });
   }
 
   toJSON() {
     return {
-      text: this.getText(),
       id: this.id,
       content: this.content,
     };
