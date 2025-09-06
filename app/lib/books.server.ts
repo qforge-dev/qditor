@@ -27,7 +27,7 @@ class Books {
   async processDiff(book: Book, diff: string) {
     const openai = new OpenAIClient();
 
-    let errors: CharacterValidationError[] = [];
+    let errors: (CharacterValidationError & { id: string })[] = [];
 
     if (book.getState().getCharacters().length !== 0) {
       for (const character of book.getState().getCharacters()) {
@@ -35,7 +35,12 @@ class Books {
         const res = await openai.completion(prompt);
         if (!res) throw new Error("no content from openai");
         const parsed = ValidateCharacterErrors.parseResponse(res);
-        errors.push(...parsed.errors);
+        errors.push(
+          ...parsed.errors.map((e) => ({
+            text: e.text,
+            id: character.toJSON().id,
+          }))
+        );
       }
     }
 
