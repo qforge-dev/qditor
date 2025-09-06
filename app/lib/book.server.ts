@@ -143,7 +143,7 @@ export interface CharacterProperties {
   description: string;
   physicalAppearance: string;
   traits: string[];
-  relationships: { id: string; type: string; state: string }[];
+  relationships: { id: string; name: string; type: string; state: string }[];
   currentLocation: string;
 }
 
