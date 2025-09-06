@@ -1,6 +1,16 @@
 import type { Character } from "../book.server";
 import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
+export class CharacterValidationException extends Error {
+  constructor(private errors: CharacterValidationError[]) {
+    super();
+  }
+
+  getErrors() {
+    this.errors;
+  }
+}
+
 export interface CharacterValidationError {
   text: string;
 }

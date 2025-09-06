@@ -2,6 +2,7 @@ import { Book } from "./book.server";
 import { OpenAIClient } from "./openai-client";
 import { GenerateCharacters } from "./prompts/generate-characters";
 import {
+  CharacterValidationException,
   ValidateCharacterErrors,
   type CharacterValidationError,
 } from "./prompts/validate-character-errors";
@@ -40,7 +41,7 @@ class Books {
 
     if (errors.length > 0) {
       console.log(errors);
-      throw new Error("Errors!"); //todo
+      throw new CharacterValidationException(errors);
     }
 
     const prompt = GenerateCharacters.build(
