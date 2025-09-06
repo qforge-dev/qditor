@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "fs/promises";
 import { canAccess } from "./utils.server";
 import { renderToMarkdown } from "@tiptap/static-renderer";
 import { extensions } from "./editor-extensions";
-import { diffSentences, type ChangeObject } from "diff";
+import { diffSentences, sentenceDiff, type ChangeObject } from "diff";
 
 export class Book {
   private content: { type: "doc"; content: any[] } = {
@@ -167,15 +167,36 @@ export type EditorContent = {
 };
 
 export class BookDiff {
-  private constructor(private readonly diff: ChangeObject<string>[]) {}
+  private constructor(
+    private readonly bookText: string,
+    private readonly newBookText: string,
+    private readonly diff: ChangeObject<string>[]
+  ) {}
 
   static create(bookText: string, newBookText: string) {
-    return new BookDiff(diffSentences(bookText, newBookText));
+    return new BookDiff(
+      bookText,
+      newBookText,
+      diffSentences(bookText, newBookText)
+    );
   }
 
   getDiff() {
-    return this.diff.filter((diff) => {
-      return diff.added;
-    });
+    return this.diff
+      .filter((diff) => {
+        return diff.added;
+      })
+      .map((diff) => {
+        const sentenceStartIndex = this.newBookText.indexOf(diff.value);
+        const startIndex = Math.max(sentenceStartIndex - 200, 0);
+        const endIndex = Math.min(
+          sentenceStartIndex + diff.value.length + 200,
+          this.newBookText.length
+        );
+        return {
+          ...diff,
+          value: this.newBookText.slice(startIndex, endIndex),
+        };
+      });
   }
 }
