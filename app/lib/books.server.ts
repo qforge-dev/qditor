@@ -20,12 +20,15 @@ class Books {
     this.books[book.id] = book;
 
     const diff = book.diffText();
-    console.log(diff.getDiff());
 
     const newDiff = diff
       .getDiff()
       .map((el) => el.valueWithContext)
-      .join("\n\n\n\n");
+      .join("\n\n\n\n")
+      .trim();
+
+    if (newDiff.length === 0) return;
+
     await this.processDiff(book, newDiff);
 
     book.save();

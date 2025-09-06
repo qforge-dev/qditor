@@ -244,6 +244,8 @@ export function SimpleEditor({ content, bookId, onEditor }: EditorProp) {
     console.log(startIndex);
   };
 
+  console.log(fetcher.state);
+
   return (
     <div className="simple-editor-wrapper max-h-[92vh]">
       <EditorContext.Provider value={{ editor }}>
