@@ -30,15 +30,13 @@ class Books {
     let errors: CharacterValidationError[] = [];
 
     if (book.getState().getCharacters().length !== 0) {
-      const prompt = ValidateCharacterErrors.build(
-        diff,
-        book.getState().getCharacters()[0]
-      ); // temp only first char
-      const res = await openai.completion(prompt);
-      if (!res) throw new Error("no content from openai");
-      const parsed = ValidateCharacterErrors.parseResponse(res);
-
-      errors = parsed.errors;
+      for (const character of book.getState().getCharacters()) {
+        const prompt = ValidateCharacterErrors.build(diff, character);
+        const res = await openai.completion(prompt);
+        if (!res) throw new Error("no content from openai");
+        const parsed = ValidateCharacterErrors.parseResponse(res);
+        errors.push(...parsed.errors);
+      }
     }
 
     if (errors.length > 0) {
