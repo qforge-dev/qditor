@@ -10,10 +10,9 @@ import {
   SidebarInput,
   SidebarInset,
 } from "~/components/ui/sidebar";
-import { getHeadingsFromJson } from "../lib/tiptap.utils";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
-import { type JSONContent, Editor, NodePos } from "@tiptap/core";
+import { Editor, NodePos } from "@tiptap/core";
 
 export { action };
 
