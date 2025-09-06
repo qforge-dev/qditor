@@ -40,19 +40,24 @@ class Books {
     let errors: CharacterValidationError[] = [];
 
     if (book.getState().getCharacters().length !== 0) {
-      for (const character of book.getState().getCharacters()) {
-        console.log(`Validating ${character.toJSON().name}`);
-        const prompt = ValidateCharacterErrors.build(diff, character);
-        const res = await openai.completion(prompt);
-        if (!res) throw new Error("no content from openai");
-        const parsed = ValidateCharacterErrors.parseResponse(res);
-        errors.push(
-          ...parsed.errors.map((e) => ({
-            text: e.text,
-            id: character.toJSON().id,
-          }))
-        );
-      }
+      const completionPromises = book
+        .getState()
+        .getCharacters()
+        .map(async (character) => {
+          console.log(`Validating ${character.toJSON().name}`);
+          const prompt = ValidateCharacterErrors.build(diff, character);
+          const completion = await openai.completion(prompt);
+          if (!completion) throw new Error("no content from openai");
+          const parsed = ValidateCharacterErrors.parseResponse(completion);
+          errors.push(
+            ...parsed.errors.map((e) => ({
+              text: e.text,
+              id: character.toJSON().id,
+            }))
+          );
+        });
+
+      await Promise.all(completionPromises);
     }
 
     if (errors.length > 0) {
