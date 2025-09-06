@@ -17,15 +17,16 @@ import { SimpleEditor } from "~/components/tiptap-templates/simple/simple-editor
 
 import type { Route } from "./+types/home";
 import { Book } from "~/lib/book";
+import { useLoaderData } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "qditor" }];
 }
 
-export function loader() {
-  const book = Book.empty();
+export async function loader() {
+  const book = await Book.empty();
 
-  return {};
+  return book.toJSON();
 }
 export default function Home() {
   return (
@@ -66,8 +67,11 @@ export default function Home() {
 }
 
 function Main() {
+  const book = useLoaderData<typeof loader>();
+  console.log(book);
   return (
     <div className="w-full ">
+      {book.text}
       <SimpleEditor />
     </div>
   );
