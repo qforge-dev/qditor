@@ -209,6 +209,62 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
     }
   }, [isMobile, mobileView]);
 
+  // React.useEffect(() => {
+  //   const textToSearch = "book";
+  //   setTimeout(() => {
+  //     if (!editor) return;
+  // editor.commands.insertContentAt({ from: 10, to: 5 }, [
+  //   {
+  //     type: "paragraph",
+  //     content: [
+  //       {
+  //         type: "text",
+  //         text: "First paragraph",
+  //         marks: [
+  //           {
+  //             type: "highlight",
+  //             attrs: {
+  //               color: "var(--tt-color-highlight-red)",
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     type: "paragraph",
+  //     content: [
+  //       {
+  //         type: "text",
+  //         text: "Second paragraph",
+  //       },
+  //     ],
+  //   },
+  // ]);
+  //   }, 2000);
+  // }, [editor, content]);
+
+  const highlight = () => {
+    if (!editor) return;
+
+    const textToSearch = "your book";
+
+    const editorContent = editor?.getHTML();
+
+    const startIndex = content.indexOf(textToSearch) + 1;
+
+    const endIndex = startIndex + textToSearch.length;
+
+    editor.commands.setTextSelection({
+      from: startIndex,
+      to: endIndex,
+    });
+
+    editor.commands.setHighlight({ color: "green" });
+
+    console.log(startIndex);
+  };
+
   return (
     <div className="simple-editor-wrapper">
       <EditorContext.Provider value={{ editor }}>
@@ -241,6 +297,10 @@ export function SimpleEditor({ content, bookId }: EditorProp) {
           role="presentation"
           className="simple-editor-content"
         />
+
+        <button className="absolute top-0 right-0 z-[100]" onClick={highlight}>
+          CLICK
+        </button>
       </EditorContext.Provider>
     </div>
   );
