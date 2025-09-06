@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, readFile, writeFile } from "fs/promises";
 import { canAccess } from "./utils.server";
 import { renderToMarkdown } from "@tiptap/static-renderer";
 import { extensions } from "./editor-extensions";
@@ -21,6 +21,7 @@ export class Book {
 
   static async existing(id: string) {
     const book = new Book(id);
+    await book.load();
     return book;
   }
 
@@ -56,6 +57,23 @@ export class Book {
     );
   }
 
+  async load() {
+    const bookContentFileName = `${this.id}.content.json`;
+    const bookStateFileName = `${this.id}.json`;
+
+    const contentJSON = await readFile(`books/${bookContentFileName}`);
+    const stateJSON = await readFile(`books/${bookStateFileName}`);
+
+    this.content = JSON.parse(contentJSON.toString());
+    const stateObject = JSON.parse(stateJSON.toString());
+
+    const characters = stateObject.characters.map((_character: any) => {
+      new Character();
+    });
+
+    this.state = new BookState(characters);
+  }
+
   static toMarkdown(content: EditorContent) {
     if (!content) return "";
     return renderToMarkdown({ content: content, extensions });
@@ -77,6 +95,8 @@ export class Book {
 }
 
 export class BookState {
+  constructor(characters: Character[]) {}
+
   private characters: Character[] = [];
 
   setCharacters(characters: Character[]) {
@@ -101,6 +121,7 @@ export interface CharacterProperties {
 }
 
 export class Character {
+  constructor() {}
   private properties: CharacterProperties = {
     id: randomUUID(),
     name: "",

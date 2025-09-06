@@ -14,8 +14,7 @@ export async function action({ request }: Route.ActionArgs) {
   const content: EditorContent = JSON.parse(contentJSON as any as string);
   const book = await books.getBook(bookId);
   book.updateContent(content);
-
-  await book.save();
+  await books.saveBook(book);
 
   return book.toJSON();
 }

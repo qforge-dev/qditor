@@ -12,7 +12,7 @@ class Books {
   async saveBook(book: Book) {
     this.books[book.id] = book;
 
-    await book.save();
+    book.save();
   }
 }
 
