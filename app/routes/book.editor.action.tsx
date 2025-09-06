@@ -16,7 +16,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const shouldSave = formData.get("save");
   if (shouldSave) {
-    books.saveBook(book);
+    await books.saveBook(book);
   }
 
   return book.toJSON();
