@@ -61,10 +61,14 @@ class Books {
       await Promise.all(completionPromises);
     }
 
-    book.getState().setErrors(errors);
-    console.log(errors);
+    const uniqueErrors = errors.filter(
+      (v, i, a) => a.findIndex(({ text }) => v.text === text) === i
+    );
 
-    if (errors.length > 0) {
+    book.getState().setErrors(uniqueErrors);
+    console.log(uniqueErrors);
+
+    if (uniqueErrors.length > 0) {
       return book;
     }
 
