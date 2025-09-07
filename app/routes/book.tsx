@@ -60,6 +60,7 @@ export default function BookRoute() {
             <SidebarGroupContent className="px-1.5 md:px-0 flex flex-col gap-2">
               <SidebarMenu>
                 <NavLink
+                  viewTransition
                   to={`/books/${book.id}/editor`}
                   className={({ isActive }) =>
                     cn("rounded-md w-8 h-8 flex justify-center items-center", {
@@ -73,6 +74,7 @@ export default function BookRoute() {
 
               <SidebarMenu>
                 <NavLink
+                  viewTransition
                   to={`/books/${book.id}/characters`}
                   className={({ isActive }) =>
                     cn("rounded-md w-8 h-8 flex justify-center items-center", {
