@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/button";
 import type { Route } from "./+types/home";
-import { Link, redirect, useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { Book } from "~/lib/book.server";
 
 export function meta({}: Route.MetaArgs) {
@@ -9,6 +9,7 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader() {
   const book = await Book.empty();
+
   return { book: book.toJSON() };
 }
 

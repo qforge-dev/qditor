@@ -20,9 +20,14 @@ import { books } from "~/lib/books.server";
 import { cn } from "~/lib/utils";
 
 export async function loader({ params }: Route.LoaderArgs) {
-  if (!params.bookId) throw new Error("Book Id required");
-  const book = await books.getBook(params.bookId);
+  if (!params.bookId) {
+    console.log("DUPA#21321312", params);
 
+    throw new Error("Book Id required");
+  }
+  console.log("DUPA", params);
+  const book = await books.getBook(params.bookId);
+  console.log(book);
   return book.toJSON();
 }
 
