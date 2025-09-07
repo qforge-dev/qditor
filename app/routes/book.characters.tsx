@@ -53,6 +53,11 @@ export default function Characters() {
                   ))}
                 </div>
               </div>
+
+              <div className="text-xs">
+                <p className="font-semibold italic">Location:</p>
+                <p className="text-xs">{character.currentLocation}</p>
+              </div>
             </li>
           );
         })}
