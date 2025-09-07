@@ -13,6 +13,11 @@ import {
 import { Button } from "~/components/ui/button";
 import { useEffect, useState } from "react";
 import { Editor, NodePos } from "@tiptap/core";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 import type { BookJson } from "./book.type";
 
@@ -88,12 +93,26 @@ export default function BookEditor() {
                     return (
                       <li
                         key={character.name}
-                        title={character.name}
                         className="rounded-full h-18 w-18 border border-neutral-300 flex justify-center items-center px-1"
                       >
-                        <div className=" truncate whitespace-nowrap ">
-                          {character.name}
-                        </div>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <div className="truncate whitespace-nowrap max-w-16">
+                              {character.name}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[300px] w-fit flex flex-col gap-1">
+                            <p>
+                              <span className="italic">Description</span>:{" "}
+                              {character.description}
+                            </p>
+
+                            <p>
+                              <span className="italic">Location</span>:{" "}
+                              {character.currentLocation}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </li>
                     );
                   })}
