@@ -24,6 +24,7 @@ export class GenerateCharacters {
 
       If the previous characters do not exist, generate all characters and properties from scratch based on the text.
       If there are previous characters, add missing information to the character the text reflects if there are any.
+      Do not come up with any additional characteristics by yourself.
       Return the whole array of characters. If nothing updated, return the old one.
 
       Explain your reasoning and at the end respond in JSON format starting with \`\`\`json and ending with \`\`\` following the schema:
@@ -64,7 +65,7 @@ export class GenerateCharacters {
         role: "system" as const,
         content: systemPrompt,
       },
-      ...GenerateCharacters.fewShotPrompts(),
+      // ...GenerateCharacters.fewShotPrompts(),
       {
         role: "user" as const,
         content: userPrompt,

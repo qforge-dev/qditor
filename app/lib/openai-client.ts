@@ -3,10 +3,11 @@ import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export class OpenAIClient {
   private client: OpenAI;
-  private model = "gpt-5-mini";
+  private model = "openai/gpt-oss-120b";
 
   constructor(model?: string) {
     this.client = new OpenAI({
+      baseURL: "https://api.groq.com/openai/v1",
       apiKey: process.env["OPENAI_API_KEY"],
     });
 

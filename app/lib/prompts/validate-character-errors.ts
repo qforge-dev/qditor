@@ -67,7 +67,7 @@ export class ValidateCharacterErrors {
         role: "system" as const,
         content: systemPrompt,
       },
-      ...ValidateCharacterErrors.fewShotPrompts(),
+      // ...ValidateCharacterErrors.fewShotPrompts(),
       {
         role: "user" as const,
         content: userPrompt,
