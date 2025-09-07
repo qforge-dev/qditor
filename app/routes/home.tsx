@@ -19,7 +19,7 @@ export default function Home() {
       <main className="p-8 justify-center items-center flex flex-col gap-4 bg-gray-100 min-h-100">
         <h1 className="text-center text-6xl">qditor</h1>
         <h2 className="text-center text-2xl">
-          AI should not write stories... but it can help!
+          AI should not write stories instead of us... but it can help!
         </h2>
         <div>
           <Button asChild>
