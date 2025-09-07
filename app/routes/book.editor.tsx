@@ -81,29 +81,53 @@ export default function BookEditor() {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {headings.length > 0 ? (
-                <ul className="flex flex-col gap-1 max-h-[92vh] overflow-y-auto p-2">
-                  {filterHeading(getHeadings(editor), search).map(
-                    (heading, index) => {
-                      const padding =
-                        parseInt(heading.element.nodeName.at(1)!) * 10;
-                      return (
-                        <li key={index} style={{ paddingLeft: padding }}>
-                          <Button
-                            variant="ghost"
-                            className={`truncate line-clamp-1 w-full max-w-full text-left cursor-pointer`}
-                            onClick={() => onHeadingClick(heading)}
-                          >
-                            {heading.textContent}
-                          </Button>
-                        </li>
-                      );
-                    }
-                  )}
+              <div className="h-[46vh]">
+                <p className="pl-4">Chapters</p>
+                {headings.length > 0 ? (
+                  <ul className="flex flex-col gap-1 h-full overflow-y-auto p-2">
+                    {filterHeading(getHeadings(editor), search).map(
+                      (heading, index) => {
+                        const padding =
+                          parseInt(heading.element.nodeName.at(1)!) * 10;
+                        return (
+                          <li key={index} style={{ paddingLeft: padding }}>
+                            <Button
+                              variant="ghost"
+                              className={`truncate line-clamp-1 w-full max-w-full text-left cursor-pointer`}
+                              onClick={() => onHeadingClick(heading)}
+                            >
+                              {heading.textContent}
+                            </Button>
+                          </li>
+                        );
+                      }
+                    )}
+                  </ul>
+                ) : (
+                  <div className="px-2 text-xs text-center py-1">
+                    No headings
+                  </div>
+                )}
+              </div>
+
+              <div className="h-[46vh] mt-4">
+                <p className="pl-4">Characters</p>
+                <ul className="grid grid-cols-3 gap-1 h-full overflow-y-auto p-4">
+                  {book.characters.map((character) => {
+                    return (
+                      <li
+                        key={character.name}
+                        title={character.name}
+                        className="rounded-full h-18 w-18 border border-neutral-300 flex justify-center items-center px-1"
+                      >
+                        <div className=" truncate whitespace-nowrap ">
+                          {character.name}
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
-              ) : (
-                <div className="px-2 text-xs text-center py-1">No headings</div>
-              )}
+              </div>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
