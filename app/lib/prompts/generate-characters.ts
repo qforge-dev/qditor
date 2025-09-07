@@ -6,9 +6,11 @@ export class GenerateCharacters {
     const [_frst, secondPart] = response.split("```json");
     const [firstPart, _sec] = secondPart.split("```");
 
-    const rawCharacters = JSON.parse(firstPart.trim());
+    const rawCharacters = JSON.parse(firstPart.trim()).characters.filter(
+      (char: any) => Object.keys(char).length !== 0
+    );
 
-    return rawCharacters.characters.map((rawCharacter: CharacterProperties) => {
+    return rawCharacters.map((rawCharacter: CharacterProperties) => {
       const character = new Character();
       character.updateCharacter(rawCharacter);
       return character;
