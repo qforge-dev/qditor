@@ -246,6 +246,19 @@ export function SimpleEditor({ content, bookId, onEditor }: EditorProp) {
 
   console.log(fetcher.state);
 
+  React.useEffect(() => {
+    if (!editor) return;
+    const onEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+        updateContent(editor!, true);
+      }
+    };
+    document.addEventListener("keypress", onEvent);
+    return () => {
+      document.removeEventListener("keypress", onEvent);
+    };
+  }, [editor]);
+
   return (
     <div className="simple-editor-wrapper max-h-[92vh]">
       <EditorContext.Provider value={{ editor }}>
