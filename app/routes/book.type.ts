@@ -8,6 +8,7 @@ export type BookJson = {
   };
   errors: {
     text: string;
+    reasoning: string;
   }[];
   characters: CharacterProperties[];
 };

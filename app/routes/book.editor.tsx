@@ -132,7 +132,8 @@ export default function BookEditor() {
                   key={index}
                 >
                   <h3 className="text-xs text-red-500">Error {index + 1}</h3>
-                  <p className="text-sm">{error.text}</p>
+                  <p className="text-sm italic">{error.text}</p>
+                  <p className="text-xs">{error.reasoning}</p>
                 </div>
               );
             })}
