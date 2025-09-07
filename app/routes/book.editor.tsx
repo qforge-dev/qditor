@@ -121,31 +121,25 @@ export default function BookEditor() {
 
               <div className="h-[40vh] mt-10">
                 <p className="pl-4">Chapters</p>
-                {headings.length > 0 ? (
-                  <ul className="flex flex-col gap-1 h-full overflow-y-auto p-2">
-                    {filterHeading(getHeadings(editor), search).map(
-                      (heading, index) => {
-                        const padding =
-                          parseInt(heading.element.nodeName.at(1)!) * 10;
-                        return (
-                          <li key={index} style={{ paddingLeft: padding }}>
-                            <Button
-                              variant="ghost"
-                              className={`truncate line-clamp-1 w-full max-w-full text-left cursor-pointer`}
-                              onClick={() => onHeadingClick(heading)}
-                            >
-                              {heading.textContent}
-                            </Button>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                ) : (
-                  <div className="px-2 text-xs text-center py-1">
-                    No headings
-                  </div>
-                )}
+                <ul className="flex flex-col gap-1 h-full overflow-y-auto p-2">
+                  {filterHeading(getHeadings(editor), search).map(
+                    (heading, index) => {
+                      const padding =
+                        parseInt(heading.element.nodeName.at(1)!) * 10;
+                      return (
+                        <li key={index} style={{ paddingLeft: padding }}>
+                          <Button
+                            variant="ghost"
+                            className={`truncate line-clamp-1 w-full max-w-full text-left cursor-pointer`}
+                            onClick={() => onHeadingClick(heading)}
+                          >
+                            {heading.textContent}
+                          </Button>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
