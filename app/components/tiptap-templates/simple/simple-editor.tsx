@@ -54,6 +54,7 @@ import { useCursorVisibility } from "~/hooks/use-cursor-visibility";
 // --- Styles ---
 import "~/components/tiptap-templates/simple/simple-editor.scss";
 import { useFetcher } from "react-router";
+import { Spinner } from "components/ui/shadcn-io/spinner";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -297,7 +298,12 @@ export function SimpleEditor({ content, bookId, onEditor }: EditorProp) {
           onClick={() => updateContent(editor!, true)}
           disabled={fetcher.state !== "idle"}
         >
-          Save
+          <div className="flex gap-1 items-center">
+            {fetcher.state === "loading" || fetcher.state === "submitting" ? (
+              <Spinner variant="ellipsis" className="size-4" />
+            ) : null}
+            Save
+          </div>
         </Button>
       </EditorContext.Provider>
     </div>
