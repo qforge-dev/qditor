@@ -24,6 +24,7 @@ export class GenerateCharacters {
 
       If the previous characters do not exist, generate all characters and properties from scratch based on the text.
       If there are previous characters, add missing information to the character the text reflects if there are any.
+      Do not remove previous characters even if they are not mentioned in the text - you receive only chunks of texts.
       Do not come up with any additional characteristics by yourself.
       Return the whole array of characters. If nothing updated, return the old one.
 
